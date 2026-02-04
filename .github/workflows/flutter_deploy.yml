@@ -2,7 +2,7 @@ name: Flutter Web Build & Deploy
 
 on:
   push:
-    branches: [ "main", "master" ]
+    branches: [ "main", "master", "web2" ]
   workflow_dispatch:
 
 jobs:
@@ -23,9 +23,7 @@ jobs:
         run: flutter pub get
 
       - name: Build Web App
-        # Adjust --base-href if deploying to a sub-path (e.g. /my-repo/)
-        # If using a custom domain, standard build is usually fine.
-        run: flutter build web --release
+        run: flutter build web --release --base-href "/website/"
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3

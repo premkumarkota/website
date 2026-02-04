@@ -13,7 +13,7 @@ class ProductsScreen extends StatelessWidget {
     final isDesktop = size.width > 1000;
 
     return Scaffold(
-      backgroundColor: const Color(0xFF0a0a0a),
+      backgroundColor: Colors.white, // Light Background
       body: CustomScrollView(
         slivers: [
           const AnimatedNavbar(),
@@ -31,7 +31,7 @@ class ProductsScreen extends StatelessWidget {
                     style: TextStyle(
                       fontSize: 14,
                       fontWeight: FontWeight.w600,
-                      color: const Color(0xFF7C3AED),
+                      color: const Color(0xFFD946EF),
                       letterSpacing: 4,
                     ),
                   ).animate().fadeIn(duration: 600.ms),
@@ -43,7 +43,7 @@ class ProductsScreen extends StatelessWidget {
                         style: TextStyle(
                           fontSize: isDesktop ? 48 : 32,
                           fontWeight: FontWeight.bold,
-                          color: Colors.white,
+                          color: const Color(0xFF111827), // Dark Heading
                         ),
                       )
                       .animate()
@@ -83,16 +83,18 @@ class ProductsScreen extends StatelessWidget {
                 margin: const EdgeInsets.only(bottom: 40),
                 padding: const EdgeInsets.all(40),
                 decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: [
-                      (product['color'] as Color).withOpacity(0.15),
-                      (product['color'] as Color).withOpacity(0.05),
-                    ],
-                  ),
+                  color: Colors.white,
                   borderRadius: BorderRadius.circular(32),
                   border: Border.all(
-                    color: (product['color'] as Color).withOpacity(0.3),
+                    color: (product['color'] as Color).withOpacity(0.15),
                   ),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.05),
+                      blurRadius: 20,
+                      offset: const Offset(0, 10),
+                    ),
+                  ],
                 ),
                 child: isDesktop
                     ? Row(
@@ -125,7 +127,7 @@ class ProductsScreen extends StatelessWidget {
                                   style: const TextStyle(
                                     fontSize: 28,
                                     fontWeight: FontWeight.bold,
-                                    color: Colors.white,
+                                    color: Color(0xFF111827), // Dark Title
                                   ),
                                 ),
                                 const SizedBox(height: 16),
@@ -133,7 +135,7 @@ class ProductsScreen extends StatelessWidget {
                                   product['shortDesc'] as String,
                                   style: TextStyle(
                                     fontSize: 16,
-                                    color: Colors.white.withOpacity(0.7),
+                                    color: const Color(0xFF4B5563), // Grey Desc
                                     height: 1.6,
                                   ),
                                 ),
@@ -179,7 +181,7 @@ class ProductsScreen extends StatelessWidget {
                                   style: const TextStyle(
                                     fontSize: 24,
                                     fontWeight: FontWeight.bold,
-                                    color: Colors.white,
+                                    color: Color(0xFF111827), // Dark Title
                                   ),
                                 ),
                               ),
@@ -190,7 +192,7 @@ class ProductsScreen extends StatelessWidget {
                             product['shortDesc'] as String,
                             style: TextStyle(
                               fontSize: 14,
-                              color: Colors.white.withOpacity(0.7),
+                              color: const Color(0xFF4B5563), // Grey Desc
                               height: 1.6,
                             ),
                           ),

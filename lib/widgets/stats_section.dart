@@ -29,6 +29,7 @@ class _StatsSectionState extends State<StatsSection> {
       },
       child: Container(
         width: double.infinity,
+        decoration: const BoxDecoration(color: Colors.transparent),
         padding: const EdgeInsets.symmetric(vertical: 100, horizontal: 24),
         child: Wrap(
           alignment: WrapAlignment.center,
@@ -54,10 +55,15 @@ class _StatsSectionState extends State<StatsSection> {
                           children: [
                             Text(
                               value.toString(),
-                              style: const TextStyle(
-                                fontSize: 80,
+                              style: TextStyle(
+                                fontSize:
+                                    MediaQuery.of(context).size.width > 1000
+                                    ? 80
+                                    : 48,
                                 fontWeight: FontWeight.w900,
-                                color: Colors.white,
+                                color: const Color(
+                                  0xFF111827,
+                                ), // Dark text for Light Theme
                                 height: 1,
                               ),
                             ),
@@ -68,7 +74,7 @@ class _StatsSectionState extends State<StatsSection> {
                                 style: const TextStyle(
                                   fontSize: 40,
                                   fontWeight: FontWeight.w900,
-                                  color: Color(0xFFEC4899),
+                                  color: Color(0xFFFB923C),
                                 ),
                               ),
                             ),
@@ -82,7 +88,7 @@ class _StatsSectionState extends State<StatsSection> {
                       style: const TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.w900,
-                        color: Color(0xFF7C3AED), // Vibrant purple
+                        color: Color(0xFFD946EF),
                         letterSpacing: 4,
                       ),
                     ),

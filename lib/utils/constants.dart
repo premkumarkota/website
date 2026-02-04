@@ -11,7 +11,7 @@ class AppData {
       'fullDesc':
           'Efficiently manage employee records, inclusive of personal details, employment information, assets, and entitlement settings. Our HRMS streamlines everything from onboarding to performance tracking, ensuring a seamless experience for both HR and employees.',
       'icon': Icons.people,
-      'color': const Color(0xFF7C3AED),
+      'color': const Color(0xFFD946EF),
       'features': [
         'Employee Management',
         'Leave Management',
@@ -61,31 +61,31 @@ class AppData {
           'description':
               'Drive growth with structured appraisals. Set OKRs and KPIs at department and individual levels. Conduct 360-degree feedback cycles and track progress with interactive performance charts.',
           'icon': Icons.trending_up,
-          'image': 'assets/images/hrms_dashboard.png', // Placeholder image
+          'image': 'assets/images/hrms_card_bg.png',
         },
         {
           'title': 'Training & Recruitment',
           'description':
               'End-to-end talent acquisition. Manage job postings, applicant tracking (ATS), and interview scheduling. Post-hiring, assign training modules and track certification progress for skills development.',
           'icon': Icons.school,
-          'image': 'assets/images/hrms_dashboard.png', // Placeholder image
+          'image': 'assets/images/hrms_card_bg.png',
         },
         {
           'title': 'Asset Management',
           'description':
               'Complete lifecycle tracking of company assets. From laptops to ID badges, monitor allocation, return dates, and maintenance history. Linked directly to employee profiles for easy audits.',
           'icon': Icons.devices,
-          'image': 'assets/images/hrms_dashboard.png', // Placeholder image
+          'image': 'assets/images/hrms_card_bg.png',
         },
         {
           'title': 'Reports & Analytics',
           'description':
               'Data-driven HR insights. Generate standard reports for headcount, turnover, and diversity. Custom report builder for specific queries and visual dashboards for executive transparency.',
           'icon': Icons.assessment,
-          'image': 'assets/images/hrms_dashboard.png', // Placeholder image
+          'image': 'assets/images/hrms_card_bg.png',
         },
       ],
-      'image': 'assets/images/hrms_dashboard.png',
+      'image': 'assets/images/hrms_card_bg.png',
     },
     {
       'id': 'crm',
@@ -95,14 +95,14 @@ class AppData {
       'fullDesc':
           'Elevate customer relationships with our CRM system. Efficiently manage leads, opportunities, and quotes with customizable templates for rapid response. Leverage insights to drive growth and enhance client satisfaction.',
       'icon': Icons.handshake,
-      'color': const Color(0xFFEC4899),
+      'color': const Color(0xFFFB923C),
       'features': [
         'Lead Management',
         'Sales Pipeline',
         'Customer Support',
         'Analytics Dashboard',
       ],
-      'image': 'assets/images/crm_dashboard.png',
+      'image': 'assets/images/crm_card_bg.png',
     },
     {
       'id': 'pms',
@@ -119,7 +119,7 @@ class AppData {
         'Time Tracking',
         'Resource Allocation',
       ],
-      'image': 'assets/images/pms_dashboard.png',
+      'image': 'assets/images/pms_card_bg.png',
     },
     {
       'id': 'accounting',
@@ -136,7 +136,7 @@ class AppData {
         'Financial Reports',
         'Tax Management',
       ],
-      'image': 'assets/images/accounting_dashboard.png',
+      'image': 'assets/images/accounting_card_bg.png',
     },
     {
       'id': 'inventory',
@@ -153,7 +153,7 @@ class AppData {
         'Supplier Management',
         'Barcode Scanning',
       ],
-      'image': 'assets/images/inventory_dashboard.png',
+      'image': 'assets/images/inventory_card_bg.png',
     },
   ];
 

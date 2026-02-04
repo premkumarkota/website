@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:go_router/go_router.dart';
 
 class AnimatedFooter extends StatelessWidget {
   const AnimatedFooter({Key? key}) : super(key: key);
@@ -9,104 +8,94 @@ class AnimatedFooter extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
+    final isDesktop = size.width > 900;
 
     return Container(
       width: double.infinity,
-      padding: EdgeInsets.symmetric(
-        horizontal: size.width > 1000 ? 120 : 24,
-        vertical: 80,
-      ),
       decoration: BoxDecoration(
-        gradient: LinearGradient(
+        gradient: const LinearGradient(
+          colors: [Color(0xFF3B82F6), Color(0xFF60A5FA)],
           begin: Alignment.topCenter,
           end: Alignment.bottomCenter,
-          colors: [Colors.transparent, const Color(0xFF1a1a2e)],
+        ),
+        border: Border(
+          top: BorderSide(color: Colors.white.withOpacity(0.1), width: 1),
         ),
       ),
-      child: Column(
+      child: Stack(
         children: [
-          // Top section
-          if (size.width > 800)
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                _buildBrandColumn(),
-                _buildLinksColumn('Products', [
-                  'HRMS',
-                  'CRM',
-                  'PMS',
-                  'Accounting',
-                  'Inventory',
-                ]),
-                _buildLinksColumn('Company', [
-                  'About Us',
-                  'Careers',
-                  'Contact',
-                  'Blog',
-                ]),
-                _buildLinksColumn('Resources', [
-                  'Documentation',
-                  'Help Center',
-                  'API Reference',
-                  'Status',
-                ]),
-                _buildNewsletterColumn(),
-              ],
-            )
-          else
-            Column(
-              children: [
-                _buildBrandColumn(),
-                const SizedBox(height: 40),
-                Wrap(
-                  spacing: 40,
-                  runSpacing: 40,
-                  children: [
-                    _buildLinksColumn('Products', [
-                      'HRMS',
-                      'CRM',
-                      'PMS',
-                      'Accounting',
-                      'Inventory',
-                    ]),
-                    _buildLinksColumn('Company', [
-                      'About Us',
-                      'Careers',
-                      'Contact',
-                      'Blog',
-                    ]),
+          // Decorative Background Shapes
+          Positioned(
+            left: -100,
+            top: -50,
+            child: Container(
+              width: 350,
+              height: 350,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                gradient: RadialGradient(
+                  colors: [
+                    const Color(0xFFD946EF).withOpacity(0.03),
+                    Colors.transparent,
                   ],
                 ),
+              ),
+            ),
+          ),
+
+          Padding(
+            padding: EdgeInsets.symmetric(
+              horizontal: isDesktop ? 120 : 24,
+              vertical: 40,
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                if (isDesktop)
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Expanded(flex: 2, child: _buildBrandColumn()),
+                      Expanded(child: _buildProductsColumn()),
+                      Expanded(flex: 2, child: _buildContactColumn()),
+                    ],
+                  )
+                else
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      _buildBrandColumn(),
+                      const SizedBox(height: 40),
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [Expanded(child: _buildProductsColumn())],
+                      ),
+                      const SizedBox(height: 40),
+                      _buildContactColumn(),
+                    ],
+                  ),
+
                 const SizedBox(height: 40),
-                _buildNewsletterColumn(),
+
+                // Bottom Copyright Line
+                Container(
+                  width: double.infinity,
+                  height: 1,
+                  color: Colors.white.withOpacity(0.2),
+                ),
+                const SizedBox(height: 12),
+
+                Text(
+                  '© 2024 Jenveda Technologies. All rights reserved.',
+                  style: TextStyle(
+                    color: Colors.white.withOpacity(0.8),
+                    fontSize: 14,
+                    letterSpacing: 0.2,
+                  ),
+                ),
               ],
             ),
-
-          const SizedBox(height: 60),
-          const Divider(color: Colors.white24),
-          const SizedBox(height: 40),
-
-          // Bottom section
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                '© 2024 Jenveda Technologies. All rights reserved.',
-                style: TextStyle(
-                  color: Colors.white.withOpacity(0.5),
-                  fontSize: 14,
-                ),
-              ),
-              Row(
-                children: [
-                  _buildSocialIcon(FontAwesomeIcons.twitter),
-                  _buildSocialIcon(FontAwesomeIcons.linkedin),
-                  _buildSocialIcon(FontAwesomeIcons.github),
-                  _buildSocialIcon(FontAwesomeIcons.instagram),
-                ],
-              ),
-            ],
           ),
         ],
       ),
@@ -117,164 +106,136 @@ class AnimatedFooter extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        // Premium Serif Logo
+        ShaderMask(
+          shaderCallback: (bounds) => const LinearGradient(
+            colors: [Color(0xFFD946EF), Color(0xFFFB923C)],
+          ).createShader(bounds),
+          child: const Text(
+            'Jenveda',
+            style: TextStyle(
+              color: Colors.black, // Base color for mask
+              fontSize: 48,
+              fontWeight: FontWeight.w800,
+              letterSpacing: -1.5,
+              fontStyle: FontStyle.italic,
+            ),
+          ),
+        ),
+        const SizedBox(height: 8),
+        SizedBox(
+          width: 340,
+          child: Text(
+            'We create digital experiences for brands and companies by using technology.',
+            style: TextStyle(
+              color: Colors.white.withOpacity(0.9),
+              height: 1.7,
+              fontSize: 18,
+              fontWeight: FontWeight.w400,
+            ),
+          ),
+        ),
+        const SizedBox(height: 8),
         Row(
           children: [
-            Container(
-              width: 50,
-              height: 50,
-              decoration: BoxDecoration(
-                gradient: const LinearGradient(
-                  colors: [Color(0xFF7C3AED), Color(0xFFEC4899)],
-                ),
-                borderRadius: BorderRadius.circular(16),
-              ),
-              child: const Center(
-                child: Text(
-                  'J',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 28,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
-            ),
-            const SizedBox(width: 16),
-            const Text(
-              'Jenveda',
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 28,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
+            _buildSocialLink(FontAwesomeIcons.facebookF),
+            _buildSocialLink(FontAwesomeIcons.instagram),
+            _buildSocialLink(FontAwesomeIcons.youtube),
+            _buildSocialLink(FontAwesomeIcons.linkedinIn),
           ],
         ),
-        const SizedBox(height: 20),
+      ],
+    ).animate().fadeIn(duration: 800.ms).slideX(begin: -0.05, end: 0);
+  }
+
+  Widget _buildSocialLink(IconData icon) {
+    return Padding(
+      padding: const EdgeInsets.only(right: 28),
+      child: MouseRegion(
+        cursor: SystemMouseCursors.click,
+        child: Icon(icon, color: Colors.white, size: 20),
+      ),
+    );
+  }
+
+  Widget _buildProductsColumn() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Text(
+          'Our Products',
+          style: TextStyle(
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
+            fontSize: 20,
+            letterSpacing: 0.5,
+          ),
+        ),
+        const SizedBox(height: 8),
+        ...['HRMS', 'PMS', 'Accounting', 'Inventory'].map((item) {
+          return Padding(
+            padding: const EdgeInsets.only(bottom: 4),
+            child: Text(
+              item,
+              style: TextStyle(
+                color: Colors.white.withOpacity(0.9),
+                fontSize: 16,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+          );
+        }),
+      ],
+    ).animate().fadeIn(duration: 800.ms, delay: 200.ms);
+  }
+
+  Widget _buildContactColumn() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Text(
+          'Contact Us',
+          style: TextStyle(
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
+            fontSize: 20,
+            letterSpacing: 0.5,
+          ),
+        ),
+        const SizedBox(height: 8),
         SizedBox(
-          width: 300,
+          width: 350,
           child: Text(
-            'Transforming businesses with next-generation ERP solutions.',
-            style: TextStyle(color: Colors.white.withOpacity(0.6), height: 1.6),
+            'Jenveda Technologies Private Limited 201, Padmaja Jansi Enclave, Opp. k.s Bakers, bhagyanagar Colony, Kphb main road (In Kalamandir Bus Stop), Hyderabad, Telangana 500072',
+            style: TextStyle(
+              color: Colors.white.withOpacity(0.9),
+              height: 1.8,
+              fontSize: 16,
+              fontWeight: FontWeight.w400,
+            ),
+          ),
+        ),
+        const SizedBox(height: 8),
+        Text(
+          '(+91) 72077 76559',
+          style: TextStyle(
+            color: Colors.white,
+            fontSize: 16,
+            fontWeight: FontWeight.w600,
+            letterSpacing: 0.5,
+          ),
+        ),
+        const SizedBox(height: 8),
+        Text(
+          'jenvedatech@gmail.com',
+          style: TextStyle(
+            color: Colors.white,
+            fontSize: 16,
+            fontWeight: FontWeight.w600,
+            letterSpacing: 0.5,
           ),
         ),
       ],
-    ).animate().fadeIn(duration: 800.ms).slideY(begin: 0.3, end: 0);
-  }
-
-  Widget _buildLinksColumn(String title, List<String> links) {
-    return Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              title,
-              style: const TextStyle(
-                color: Colors.white,
-                fontWeight: FontWeight.bold,
-                fontSize: 16,
-              ),
-            ),
-            const SizedBox(height: 20),
-            ...links.map((link) {
-              return Padding(
-                padding: const EdgeInsets.only(bottom: 12),
-                child: GestureDetector(
-                  onTap: () {},
-                  child: Text(
-                    link,
-                    style: TextStyle(
-                      color: Colors.white.withOpacity(0.6),
-                      fontSize: 14,
-                    ),
-                  ),
-                ),
-              );
-            }),
-          ],
-        )
-        .animate()
-        .fadeIn(duration: 800.ms, delay: 100.ms)
-        .slideY(begin: 0.3, end: 0);
-  }
-
-  Widget _buildNewsletterColumn() {
-    return Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text(
-              'Stay Updated',
-              style: TextStyle(
-                color: Colors.white,
-                fontWeight: FontWeight.bold,
-                fontSize: 16,
-              ),
-            ),
-            const SizedBox(height: 20),
-            Container(
-              width: 300,
-              padding: const EdgeInsets.all(4),
-              decoration: BoxDecoration(
-                color: Colors.white.withOpacity(0.05),
-                borderRadius: BorderRadius.circular(12),
-                border: Border.all(color: Colors.white.withOpacity(0.1)),
-              ),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: TextField(
-                      style: const TextStyle(color: Colors.white),
-                      decoration: InputDecoration(
-                        hintText: 'Enter your email',
-                        hintStyle: TextStyle(
-                          color: Colors.white.withOpacity(0.4),
-                        ),
-                        border: InputBorder.none,
-                        contentPadding: const EdgeInsets.symmetric(
-                          horizontal: 16,
-                        ),
-                      ),
-                    ),
-                  ),
-                  Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 20,
-                      vertical: 12,
-                    ),
-                    decoration: BoxDecoration(
-                      gradient: const LinearGradient(
-                        colors: [Color(0xFF7C3AED), Color(0xFFEC4899)],
-                      ),
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    child: const Icon(
-                      Icons.arrow_forward,
-                      color: Colors.white,
-                      size: 20,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ],
-        )
-        .animate()
-        .fadeIn(duration: 800.ms, delay: 200.ms)
-        .slideY(begin: 0.3, end: 0);
-  }
-
-  Widget _buildSocialIcon(IconData icon) {
-    return Container(
-          margin: const EdgeInsets.only(left: 16),
-          padding: const EdgeInsets.all(12),
-          decoration: BoxDecoration(
-            color: Colors.white.withOpacity(0.05),
-            borderRadius: BorderRadius.circular(12),
-            border: Border.all(color: Colors.white.withOpacity(0.1)),
-          ),
-          child: Icon(icon, color: Colors.white.withOpacity(0.7), size: 20),
-        )
-        .animate()
-        .fadeIn(duration: 600.ms)
-        .scale(begin: const Offset(0, 0), end: const Offset(1, 1));
+    ).animate().fadeIn(duration: 800.ms, delay: 400.ms);
   }
 }

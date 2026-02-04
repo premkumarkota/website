@@ -39,7 +39,7 @@ class _ProductsShowcaseState extends State<ProductsShowcase>
       'subtitle': 'CRM',
       'description':
           'Elevate customer relationships with lead management, opportunities, and customizable quotations.',
-      'color': const Color(0xFFEC4899),
+      'color': const Color(0xFFFB923C),
       'icon': Icons.handshake,
       'features': [
         'Lead Management',
@@ -114,6 +114,7 @@ class _ProductsShowcaseState extends State<ProductsShowcase>
       },
       child: Container(
         width: double.infinity,
+        decoration: const BoxDecoration(color: Colors.transparent),
         padding: EdgeInsets.symmetric(
           horizontal: isDesktop ? 120 : 24,
           vertical: 100,
@@ -121,28 +122,37 @@ class _ProductsShowcaseState extends State<ProductsShowcase>
         child: Column(
           children: [
             // Header
-            Text(
-              'OUR SOLUTIONS',
-              style: TextStyle(
-                fontSize: 14,
-                fontWeight: FontWeight.w600,
-                color: const Color(0xFFEC4899),
-                letterSpacing: 4,
-              ),
-            ).animate(target: isVisible ? 1 : 0).fadeIn(duration: 600.ms),
-
-            const SizedBox(height: 16),
-
-            Text(
-                  'Five Pillars of Excellence',
-                  style: TextStyle(
-                    fontSize: isDesktop ? 48 : 32,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                  ),
+            // Header
+            Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      'OUR ',
+                      style: TextStyle(
+                        fontSize: isDesktop ? 48 : 32,
+                        fontWeight: FontWeight.bold,
+                        color: const Color(0xFF111827), // Dark text
+                        letterSpacing: -1,
+                      ),
+                    ),
+                    ShaderMask(
+                      shaderCallback: (bounds) => const LinearGradient(
+                        colors: [Color(0xFFD946EF), Color(0xFFF43F5E)],
+                      ).createShader(bounds),
+                      child: Text(
+                        'SOLUTIONS',
+                        style: TextStyle(
+                          fontSize: isDesktop ? 48 : 32,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                          letterSpacing: -1,
+                        ),
+                      ),
+                    ),
+                  ],
                 )
                 .animate(target: isVisible ? 1 : 0)
-                .fadeIn(duration: 600.ms, delay: 100.ms)
+                .fadeIn(duration: 600.ms)
                 .slideY(begin: 0.3, end: 0),
 
             const SizedBox(height: 80),
@@ -219,27 +229,27 @@ class _ProductsShowcaseState extends State<ProductsShowcase>
     final isHovered = hoveredIndex == index;
     final color = product['color'] as Color;
 
+    final isMobile = MediaQuery.of(context).size.width < 1000;
+
     return Container(
-          height: 500,
+          height: isMobile ? 450 : 500,
           decoration: BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-              colors: [
-                color.withOpacity(isHovered ? 0.3 : 0.15),
-                color.withOpacity(isHovered ? 0.1 : 0.05),
-              ],
-            ),
+            color: Colors.white, // Light Card
             borderRadius: BorderRadius.circular(32),
             border: Border.all(
-              color: color.withOpacity(isHovered ? 0.6 : 0.3),
+              color: color.withOpacity(isHovered ? 0.5 : 0.15),
               width: isHovered ? 2 : 1,
             ),
             boxShadow: [
               BoxShadow(
-                color: color.withOpacity(isHovered ? 0.4 : 0.2),
+                color: color.withOpacity(isHovered ? 0.25 : 0.05),
                 blurRadius: isHovered ? 60 : 30,
                 offset: const Offset(0, 20),
+              ),
+              BoxShadow(
+                color: Colors.black.withOpacity(0.05),
+                blurRadius: 20,
+                offset: const Offset(0, 10),
               ),
             ],
           ),
@@ -251,7 +261,7 @@ class _ProductsShowcaseState extends State<ProductsShowcase>
                 Positioned.fill(
                   child: AnimatedOpacity(
                     duration: const Duration(milliseconds: 300),
-                    opacity: isHovered ? 1 : 0,
+                    opacity: isHovered ? 1 : 0.3, // Visible but subtle
                     child: CustomPaint(painter: GridPainter(color: color)),
                   ),
                 ),
@@ -306,7 +316,7 @@ class _ProductsShowcaseState extends State<ProductsShowcase>
                                 style: TextStyle(
                                   fontSize: 14,
                                   fontWeight: FontWeight.w600,
-                                  color: color,
+                                  color: color, // Accent color
                                   letterSpacing: 2,
                                 ),
                               ),
@@ -319,7 +329,7 @@ class _ProductsShowcaseState extends State<ProductsShowcase>
                                 style: const TextStyle(
                                   fontSize: 24,
                                   fontWeight: FontWeight.bold,
-                                  color: Colors.white,
+                                  color: Color(0xFF111827), // Dark Title
                                 ),
                               ),
 
@@ -330,7 +340,9 @@ class _ProductsShowcaseState extends State<ProductsShowcase>
                                 product['description'] as String,
                                 style: TextStyle(
                                   fontSize: 14,
-                                  color: Colors.white.withOpacity(0.7),
+                                  color: const Color(
+                                    0xFF4B5563,
+                                  ), // Grey Description
                                   height: 1.6,
                                 ),
                               ),
@@ -349,19 +361,19 @@ class _ProductsShowcaseState extends State<ProductsShowcase>
                                           vertical: 6,
                                         ),
                                         decoration: BoxDecoration(
-                                          color: color.withOpacity(0.2),
+                                          color: const Color(0xFFF3F4F6),
                                           borderRadius: BorderRadius.circular(
                                             20,
                                           ),
                                           border: Border.all(
-                                            color: color.withOpacity(0.3),
+                                            color: const Color(0xFFE5E7EB),
                                           ),
                                         ),
                                         child: Text(
                                           feature,
-                                          style: TextStyle(
+                                          style: const TextStyle(
                                             fontSize: 12,
-                                            color: color,
+                                            color: Color(0xFF374151),
                                             fontWeight: FontWeight.w500,
                                           ),
                                         ),
@@ -435,7 +447,8 @@ class GridPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     final paint = Paint()
-      ..color = color.withOpacity(0.1)
+      ..color = color
+          .withOpacity(0.05) // Very subtle
       ..strokeWidth = 1;
 
     const spacing = 30.0;

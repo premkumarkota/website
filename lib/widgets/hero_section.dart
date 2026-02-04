@@ -3,8 +3,6 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:go_router/go_router.dart';
-import 'dart:math' as math;
-import '3d_card_widget.dart';
 import 'glowing_button.dart';
 
 class HeroSection extends StatefulWidget {
@@ -14,333 +12,274 @@ class HeroSection extends StatefulWidget {
   State<HeroSection> createState() => _HeroSectionState();
 }
 
-class _HeroSectionState extends State<HeroSection>
-    with SingleTickerProviderStateMixin {
-  late AnimationController _controller;
-  late Animation<double> _rotationAnimation;
-  late Animation<double> _floatAnimation;
-
-  @override
-  void initState() {
-    super.initState();
-    _controller = AnimationController(
-      duration: const Duration(seconds: 10),
-      vsync: this,
-    )..repeat();
-
-    _rotationAnimation = Tween<double>(
-      begin: 0,
-      end: 2 * math.pi,
-    ).animate(CurvedAnimation(parent: _controller, curve: Curves.linear));
-
-    _floatAnimation = Tween<double>(
-      begin: -20,
-      end: 20,
-    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeInOut));
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
-
+class _HeroSectionState extends State<HeroSection> {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     final isDesktop = size.width > 1100;
 
     return Container(
-      constraints: BoxConstraints(minHeight: size.height),
+      constraints: BoxConstraints(
+        minHeight: isDesktop ? size.height * 0.85 : size.height * 0.75,
+      ),
       width: double.infinity,
-      padding: EdgeInsets.symmetric(
-        horizontal: isDesktop ? 120 : 24,
-        vertical: isDesktop ? 40 : 100,
+      padding: EdgeInsets.only(
+        left: isDesktop ? 120 : 24,
+        right: isDesktop ? 120 : 24,
+        top: isDesktop ? 80 : 60,
+        bottom: isDesktop ? 80 : 60,
       ),
-      child: Row(
-        children: [
-          Expanded(
-            flex: isDesktop ? 5 : 1,
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // Badge
-                Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 16,
-                    vertical: 8,
-                  ),
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      colors: [
-                        const Color(0xFFD946EF).withOpacity(0.2),
-                        const Color(0xFFFB923C).withOpacity(0.2),
-                      ],
-                      begin: Alignment.centerLeft,
-                      end: Alignment.centerRight,
-                    ),
-                    borderRadius: BorderRadius.circular(50),
-                    border: Border.all(
-                      color: const Color(0xFFD946EF).withOpacity(0.3),
-                    ),
-                  ),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Container(
-                            width: 8,
-                            height: 8,
-                            decoration: const BoxDecoration(
-                              color: Color(0xFF10B981),
-                              shape: BoxShape.circle,
-                            ),
-                          )
-                          .animate(onPlay: (controller) => controller.repeat())
-                          .shimmer(duration: 1000.ms),
-                      const SizedBox(width: 8),
-                      const Text(
-                        'Next-Gen ERP Solution',
-                        style: TextStyle(
-                          color: Colors.white70,
-                          fontSize: 14,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                    ],
-                  ),
-                ).animate().fadeIn(duration: 600.ms).slideY(begin: 0.3, end: 0),
-
-                const SizedBox(height: 32),
-
-                // Main heading with animated text
-                Container(
-                  constraints: BoxConstraints(minHeight: isDesktop ? 180 : 120),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                            'Experience Efficiency and Empower Your Business',
-                            style: GoogleFonts.poppins(
-                              fontSize: isDesktop ? 64 : 32,
-                              fontWeight: FontWeight.w900,
-                              color: Colors.white,
-                              height: 1.1,
-                              letterSpacing: -1.5,
-                            ),
-                          )
-                          .animate()
-                          .fadeIn(duration: 800.ms)
-                          .slideY(begin: 0.2, end: 0),
-                      const SizedBox(height: 16),
-                      DefaultTextStyle(
-                        style: GoogleFonts.poppins(
-                          fontSize: isDesktop ? 32 : 20,
-                          fontWeight: FontWeight.w600,
-                          color: const Color(0xFF7C3AED), // Use theme color
-                          height: 1.2,
-                        ),
-                        child: AnimatedTextKit(
-                          animatedTexts: [
-                            TypewriterAnimatedText(
-                              'With our Cutting-Edge ERP Software Solution',
-                              speed: const Duration(milliseconds: 60),
-                              cursor: '|',
-                            ),
-                          ],
-                          totalRepeatCount: 1,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-
-                const SizedBox(height: 32),
-
-                // Subtitle / Description
-                Text(
-                      'Streamline your operations, boost productivity, and drive profitability with our comprehensive ERP software. From seamless integration to powerful analytics, our solution is tailored to empower businesses of all sizes and industries.',
-                      style: TextStyle(
-                        fontSize: isDesktop ? 20 : 16,
-                        color: Colors.white.withOpacity(0.7),
-                        height: 1.6,
-                        fontWeight: FontWeight.w300,
-                        letterSpacing: 0.2,
-                      ),
-                    )
-                    .animate()
-                    .fadeIn(duration: 800.ms, delay: 1500.ms)
-                    .slideY(begin: 0.2, end: 0),
-
-                const SizedBox(height: 48),
-
-                // CTA Buttons
-                Wrap(
-                  // Changed Row to Wrap for better responsiveness
-                  spacing: 20,
-                  runSpacing: 20,
-                  children: [
-                    GlowingButton(
-                          text: 'Explore Solutions',
-                          onTap: () => context.go('/products'),
-                          icon: Icons.rocket_launch,
-                        )
-                        .animate()
-                        .fadeIn(duration: 600.ms, delay: 1200.ms)
-                        .scale(begin: const Offset(0.8, 0.8)),
-
-                    const SizedBox(width: 20),
-
-                    GestureDetector(
-                          onTap: () => context.go('/contact'),
-                          child: Container(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 32,
-                              vertical: 20,
-                            ),
-                            decoration: BoxDecoration(
-                              border: Border.all(
-                                color: Colors.white.withOpacity(0.3),
-                              ),
-                              borderRadius: BorderRadius.circular(16),
-                            ),
-                            child: Row(
-                              children: [
-                                Icon(
-                                  Icons.play_circle_outline,
-                                  color: Colors.white.withOpacity(0.9),
-                                ),
-                                const SizedBox(width: 8),
-                                Text(
-                                  'Watch Demo',
-                                  style: TextStyle(
-                                    color: Colors.white.withOpacity(0.9),
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        )
-                        .animate()
-                        .fadeIn(duration: 600.ms, delay: 1400.ms)
-                        .scale(begin: const Offset(0.8, 0.8)),
-                  ],
-                ),
-              ],
-            ),
-          ),
-
-          if (isDesktop) ...[
-            const SizedBox(width: 60),
-            Expanded(flex: 5, child: _build3DShowcase()),
-          ],
-        ],
-      ),
+      child: Center(child: _buildHeroContent(isDesktop)),
     );
   }
 
-  Widget _build3DShowcase() {
-    return AnimatedBuilder(
-      animation: _controller,
-      builder: (context, child) {
-        return Stack(
-          alignment: Alignment.center,
-          children: [
-            // Background glow
-            Container(
-              width: 500,
-              height: 500,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                gradient: RadialGradient(
-                  colors: [
-                    const Color(0xFF7C3AED).withOpacity(0.3),
-                    Colors.transparent,
-                  ],
+  Widget _buildHeroContent(bool isDesktop) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        // Badge
+        Container(
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: [
+                const Color(0xFFD946EF).withOpacity(0.15),
+                const Color(0xFFFB923C).withOpacity(0.15),
+              ],
+              begin: Alignment.centerLeft,
+              end: Alignment.centerRight,
+            ),
+            borderRadius: BorderRadius.circular(50),
+            border: Border.all(color: const Color(0xFFD946EF).withOpacity(0.3)),
+          ),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Container(
+                    width: 10,
+                    height: 10,
+                    decoration: const BoxDecoration(
+                      color: Color(0xFF10B981),
+                      shape: BoxShape.circle,
+                    ),
+                  )
+                  .animate(onPlay: (controller) => controller.repeat())
+                  .shimmer(duration: 1000.ms),
+              const SizedBox(width: 10),
+              const Text(
+                'Next-Gen ERP Solution',
+                style: TextStyle(
+                  color: const Color(0xFF1F2937), // Dark text
+                  fontSize: 14,
+                  fontWeight: FontWeight.w600,
+                  letterSpacing: 1,
                 ),
               ),
-            ),
+            ],
+          ),
+        ).animate().fadeIn(duration: 600.ms).slideY(begin: 0.3, end: 0),
 
-            // Floating 3D Cards
-            Transform.translate(
-              offset: Offset(
-                math.cos(_rotationAnimation.value) * 30,
-                math.sin(_rotationAnimation.value) * 20 + _floatAnimation.value,
-              ),
-              child: const Card3D(
-                color: Color(0xFF7C3AED),
-                icon: Icons.people,
-                title: 'HRMS',
-                delay: 0,
-              ),
-            ),
+        const SizedBox(height: 40),
 
-            Transform.translate(
-              offset: Offset(
-                -math.cos(_rotationAnimation.value + 1) * 40,
-                math.sin(_rotationAnimation.value + 1) * 30 -
-                    _floatAnimation.value * 0.5,
-              ),
-              child: const Card3D(
-                color: Color(0xFF3B82F6),
-                icon: Icons.assignment,
-                title: 'PMS',
-                delay: 200,
-              ),
-            ),
+        // Main heading - Centered
+        Container(
+          constraints: BoxConstraints(
+            maxWidth: isDesktop ? 900 : double.infinity,
+          ),
+          child: Column(
+            children: [
+              Text(
+                    'Experience Efficiency and',
+                    textAlign: TextAlign.center,
+                    style: GoogleFonts.poppins(
+                      fontSize: isDesktop ? 68 : 36,
+                      fontWeight: FontWeight.w900,
+                      color: const Color(0xFF111827), // Dark heading
+                      height: 1.1,
+                      letterSpacing: -2,
+                    ),
+                  )
+                  .animate()
+                  .fadeIn(duration: 800.ms, delay: 100.ms)
+                  .slideY(begin: 0.2, end: 0),
 
-            Transform.translate(
-              offset: Offset(
-                math.cos(_rotationAnimation.value + 2) * 35,
-                -math.sin(_rotationAnimation.value + 2) * 25 +
-                    _floatAnimation.value * 0.7,
-              ),
-              child: const Card3D(
-                color: Color(0xFF10B981),
-                icon: Icons.account_balance,
-                title: 'Accounting',
-                delay: 400,
-              ),
-            ),
+              ShaderMask(
+                    shaderCallback: (bounds) => const LinearGradient(
+                      colors: [Color(0xFFD946EF), Color(0xFFFB923C)],
+                    ).createShader(bounds),
+                    child: Text(
+                      'Empower Your Business',
+                      textAlign: TextAlign.center,
+                      style: GoogleFonts.poppins(
+                        fontSize: isDesktop ? 68 : 36,
+                        fontWeight: FontWeight.w900,
+                        color: Colors.black, // Opaque for mask
+                        height: 1.1,
+                        letterSpacing: -2,
+                      ),
+                    ),
+                  )
+                  .animate()
+                  .fadeIn(duration: 800.ms, delay: 200.ms)
+                  .slideY(begin: 0.2, end: 0),
 
-            // Center glowing orb
-            Container(
-                  width: 200,
-                  height: 200,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    gradient: RadialGradient(
-                      colors: [
-                        const Color(0xFFEC4899).withOpacity(0.8),
-                        const Color(0xFF7C3AED).withOpacity(0.4),
-                        Colors.transparent,
+              const SizedBox(height: 20),
+
+              DefaultTextStyle(
+                style: GoogleFonts.poppins(
+                  fontSize: isDesktop ? 26 : 18,
+                  fontWeight: FontWeight.w500,
+                  color: const Color(0xFF374151), // Animated text dark
+                  height: 1.4,
+                ),
+                child: AnimatedTextKit(
+                  animatedTexts: [
+                    TypewriterAnimatedText(
+                      'With our Cutting-Edge ERP Software Solution',
+                      speed: const Duration(milliseconds: 50),
+                      cursor: '|',
+                      textAlign: TextAlign.center,
+                    ),
+                  ],
+                  totalRepeatCount: 1,
+                ),
+              ),
+            ],
+          ),
+        ),
+
+        const SizedBox(height: 32),
+
+        // Description
+        Container(
+              constraints: BoxConstraints(
+                maxWidth: isDesktop ? 700 : double.infinity,
+              ),
+              child: Text(
+                'Streamline your operations, boost productivity, and drive profitability with our comprehensive ERP software. From seamless integration to powerful analytics.',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: isDesktop ? 18 : 16,
+                  color: const Color(0xFF4B5563), // Description grey
+                  height: 1.7,
+                  fontWeight: FontWeight.w400,
+                  letterSpacing: 0.2,
+                ),
+              ),
+            )
+            .animate()
+            .fadeIn(duration: 800.ms, delay: 1200.ms)
+            .slideY(begin: 0.2, end: 0),
+
+        const SizedBox(height: 48),
+
+        // CTA Buttons - Centered
+        Wrap(
+          spacing: 20,
+          runSpacing: 20,
+          alignment: WrapAlignment.center,
+          children: [
+            GlowingButton(
+                  text: 'Explore Solutions',
+                  onTap: () => context.go('/products'),
+                  icon: Icons.rocket_launch,
+                )
+                .animate()
+                .fadeIn(duration: 600.ms, delay: 1400.ms)
+                .scale(begin: const Offset(0.9, 0.9)),
+
+            GestureDetector(
+                  onTap: () => context.go('/contact'),
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 32,
+                      vertical: 20,
+                    ),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      border: Border.all(
+                        color: const Color(0xFFE5E7EB),
+                        width: 2,
+                      ),
+                      borderRadius: BorderRadius.circular(16),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.05),
+                          blurRadius: 20,
+                          offset: const Offset(0, 10),
+                        ),
                       ],
                     ),
-                    boxShadow: [
-                      BoxShadow(
-                        color: const Color(0xFFEC4899).withOpacity(0.5),
-                        blurRadius: 100,
-                        spreadRadius: 50,
-                      ),
-                    ],
+                    child: const Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(
+                          Icons.play_circle_outline,
+                          color: Color(0xFF1F2937),
+                        ),
+                        SizedBox(width: 8),
+                        Text(
+                          'Watch Demo',
+                          style: TextStyle(
+                            color: Color(0xFF1F2937),
+                            fontWeight: FontWeight.w600,
+                            fontSize: 16,
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 )
-                .animate(onPlay: (controller) => controller.repeat())
-                .scale(
-                  duration: 3000.ms,
-                  begin: const Offset(0.9, 0.9),
-                  end: const Offset(1.1, 1.1),
-                )
-                .then()
-                .scale(
-                  duration: 3000.ms,
-                  begin: const Offset(1.1, 1.1),
-                  end: const Offset(0.9, 0.9),
-                ),
+                .animate()
+                .fadeIn(duration: 600.ms, delay: 1500.ms)
+                .scale(begin: const Offset(0.9, 0.9)),
           ],
-        );
-      },
+        ),
+
+        const SizedBox(height: 60),
+
+        // Scroll indicator
+        Column(
+          children: [
+            Text(
+              'Scroll to explore',
+              style: TextStyle(
+                color: const Color(0xFF6B7280), // Scroll label
+                fontSize: 13,
+                fontWeight: FontWeight.w500,
+                letterSpacing: 1,
+              ),
+            ),
+            const SizedBox(height: 8),
+            Container(
+              width: 24,
+              height: 40,
+              decoration: BoxDecoration(
+                border: Border.all(color: const Color(0xFFD1D5DB), width: 2),
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Align(
+                alignment: Alignment.topCenter,
+                child:
+                    Container(
+                          margin: const EdgeInsets.only(top: 8),
+                          width: 4,
+                          height: 8,
+                          decoration: BoxDecoration(
+                            color: const Color(0xFFD946EF),
+                            borderRadius: BorderRadius.circular(2),
+                          ),
+                        )
+                        .animate(onPlay: (c) => c.repeat())
+                        .slideY(begin: 0, end: 1.5, duration: 1200.ms)
+                        .then()
+                        .fadeOut(duration: 300.ms),
+              ),
+            ),
+          ],
+        ).animate().fadeIn(delay: 2000.ms),
+      ],
     );
   }
 }

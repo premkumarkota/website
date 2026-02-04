@@ -22,7 +22,7 @@ class JenvedaApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: _buildTheme(),
       darkTheme: _buildDarkTheme(),
-      themeMode: ThemeMode.dark,
+      themeMode: ThemeMode.light,
       routeInformationParser: AppRouter.router.routeInformationParser,
       routerDelegate: AppRouter.router.routerDelegate,
       routeInformationProvider: AppRouter.router.routeInformationProvider,
@@ -32,19 +32,18 @@ class JenvedaApp extends StatelessWidget {
   ThemeData _buildTheme() {
     return ThemeData(
       useMaterial3: true,
-      brightness: Brightness.dark,
-      scaffoldBackgroundColor: const Color(0xFF0a0a0a),
-      colorScheme: const ColorScheme.dark(
-        primary: Color(0xFF7C3AED),
-        secondary: Color(0xFFEC4899),
-        surface: Color(0xFF1a1a2e),
-        background: Color(0xFF0a0a0a),
-        onSurface: Colors.white,
+      brightness: Brightness.light,
+      scaffoldBackgroundColor: Colors.white,
+      colorScheme: const ColorScheme.light(
+        primary: Color(0xFFD946EF),
+        secondary: Color(0xFFFB923C),
+        surface: Colors.white,
+        onSurface: Color(0xFF1F2937),
       ),
-      textTheme: GoogleFonts.poppinsTextTheme(ThemeData.dark().textTheme),
+      textTheme: GoogleFonts.poppinsTextTheme(ThemeData.light().textTheme),
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
-          backgroundColor: const Color(0xFF7C3AED),
+          backgroundColor: const Color(0xFFD946EF),
           foregroundColor: Colors.white,
           elevation: 0,
           padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 20),

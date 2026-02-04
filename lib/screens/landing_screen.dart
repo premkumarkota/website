@@ -5,12 +5,14 @@ import '../widgets/hero_section.dart';
 import '../widgets/animated_navbar.dart';
 import '../widgets/features_3d_section.dart';
 import '../widgets/products_showcase.dart';
+import '../widgets/immersive_carousel_section.dart';
+import '../widgets/product_suite_section.dart';
 import '../widgets/clients_showcase.dart';
 import '../widgets/stats_section.dart';
 import '../widgets/testimonial_section.dart';
 import '../widgets/cta_section.dart';
+import '../widgets/interface_showcase_section.dart';
 import '../widgets/animated_footer.dart';
-import '../widgets/floating_particles.dart';
 import '../controller/navigation_controller.dart';
 
 class LandingScreen extends StatefulWidget {
@@ -23,73 +25,83 @@ class LandingScreen extends StatefulWidget {
 class _LandingScreenState extends State<LandingScreen>
     with TickerProviderStateMixin {
   final NavigationController navController = Get.find();
-  late AnimationController _particleController;
-  late AnimationController _floatController;
 
   @override
   void initState() {
     super.initState();
-    _particleController = AnimationController(
-      duration: const Duration(seconds: 20),
-      vsync: this,
-    )..repeat();
-
-    _floatController = AnimationController(
-      duration: const Duration(seconds: 6),
-      vsync: this,
-    )..repeat(reverse: true);
   }
 
   @override
   void dispose() {
-    _particleController.dispose();
-    _floatController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFF0a0a0a),
+      backgroundColor: const Color(0xFFF9FAFB), // Light Theme Background
       endDrawer: _buildMobileDrawer(),
       body: Stack(
         children: [
-          // Animated gradient background
-          _buildAnimatedBackground(),
+          // UNIFIED STATIC BACKGROUND (Light Theme)
+          Positioned.fill(child: Container(color: const Color(0xFFF9FAFB))),
 
-          // Floating particles
-          FloatingParticles(controller: _particleController),
+          // Gradient Overlay (Light Theme adjustments)
+          Positioned.fill(
+            child: Container(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: [
+                    Colors.white.withOpacity(0.4),
+                    Colors.white.withOpacity(0.1),
+                    Colors.white.withOpacity(0.5),
+                  ],
+                ),
+              ),
+            ),
+          ),
 
-          // Main content
+          // Main Content - Scrolls over the fixed background
           CustomScrollView(
             controller: navController.scrollController,
             physics: const BouncingScrollPhysics(),
             slivers: [
-              // Navbar
+              // Section 1: Navbar
               const AnimatedNavbar(),
 
-              // Hero Section with 3D elements
+              // Section 1: Hero Section - Centered Content (Light area)
               const SliverToBoxAdapter(child: HeroSection()),
 
-              // Features with 3D cards
+              // Section 2: Enterprise Platform (Transition area)
+              const SliverToBoxAdapter(child: ImmersiveCarouselSection()),
+
+              // Section 2.5: App Interface Showcase
+              const SliverToBoxAdapter(child: InterfaceShowcaseSection()),
+
+              // Section 3: Product Suite (Dark area)
+              const SliverToBoxAdapter(child: ProductSuiteSection()),
+
+              // Section 4: Features with 3D cards
               const SliverToBoxAdapter(child: Features3DSection()),
 
-              // Products showcase
+              // Section 5: Products showcase
               const SliverToBoxAdapter(child: ProductsShowcase()),
 
-              // Clients Showcase Marquee
+              // Section 6: Clients Showcase Marquee
               const SliverToBoxAdapter(child: ClientsShowcase()),
 
-              // Stats counter animation
+              // Section 7: Stats counter animation
               const SliverToBoxAdapter(child: StatsSection()),
 
-              // Testimonials
+              // Section 8: Testimonials
               const SliverToBoxAdapter(child: TestimonialsSection()),
 
-              // CTA Section
+              // Section 9: CTA Section
               const SliverToBoxAdapter(child: CTASection()),
 
-              // Footer
+              // Section 10: Footer
               const SliverToBoxAdapter(child: AnimatedFooter()),
             ],
           ),
@@ -107,25 +119,24 @@ class _LandingScreenState extends State<LandingScreen>
     ];
 
     return Drawer(
-      backgroundColor: const Color(0xFF0a0a0a),
+      backgroundColor: Colors.white,
       child: Column(
         children: [
           DrawerHeader(
             decoration: const BoxDecoration(
               gradient: LinearGradient(
-                colors: [Color(0xFF7C3AED), Color(0xFFEC4899)],
+                colors: [Color(0xFFD946EF), Color(0xFFFB923C)],
+                begin: Alignment.centerLeft,
+                end: Alignment.centerRight,
               ),
             ),
-            child: Center(
-              child: Image.network(
-                'https://placeholder.com/150', // Replace with real logo if needed
-                errorBuilder: (c, e, s) => const Text(
-                  'Jenveda',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 32,
-                    fontWeight: FontWeight.bold,
-                  ),
+            child: const Center(
+              child: Text(
+                'Jenveda',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 32,
+                  fontWeight: FontWeight.bold,
                 ),
               ),
             ),
@@ -137,7 +148,11 @@ class _LandingScreenState extends State<LandingScreen>
                 return ListTile(
                   title: Text(
                     item['title'] as String,
-                    style: const TextStyle(color: Colors.white, fontSize: 18),
+                    style: const TextStyle(
+                      color: Color(0xFF1F2937),
+                      fontSize: 18,
+                      fontWeight: FontWeight.w500,
+                    ),
                   ),
                   onTap: () {
                     Navigator.pop(context);
@@ -149,43 +164,44 @@ class _LandingScreenState extends State<LandingScreen>
           ),
           Padding(
             padding: const EdgeInsets.all(24),
-            child: ElevatedButton(
-              onPressed: () {},
-              style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFF7C3AED),
-                minimumSize: const Size(double.infinity, 50),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
+            child: Container(
+              decoration: BoxDecoration(
+                gradient: const LinearGradient(
+                  colors: [Color(0xFFD946EF), Color(0xFFFB923C)],
+                  begin: Alignment.centerLeft,
+                  end: Alignment.centerRight,
+                ),
+                borderRadius: BorderRadius.circular(12),
+                boxShadow: [
+                  BoxShadow(
+                    color: const Color(0xFFD946EF).withOpacity(0.3),
+                    blurRadius: 20,
+                    offset: const Offset(0, 8),
+                  ),
+                ],
+              ),
+              child: ElevatedButton(
+                onPressed: () {},
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.transparent,
+                  shadowColor: Colors.transparent,
+                  minimumSize: const Size(double.infinity, 50),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                ),
+                child: const Text(
+                  'Get Started',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.w600,
+                  ),
                 ),
               ),
-              child: const Text('Get Started'),
             ),
           ),
         ],
       ),
-    );
-  }
-
-  Widget _buildAnimatedBackground() {
-    return AnimatedBuilder(
-      animation: _floatController,
-      builder: (context, child) {
-        return Container(
-          decoration: BoxDecoration(
-            gradient: RadialGradient(
-              center: Alignment(
-                -0.5 + (_floatController.value * 0.2),
-                -0.5 + (_floatController.value * 0.1),
-              ),
-              radius: 1.5,
-              colors: [
-                const Color(0xFF7C3AED).withOpacity(0.15),
-                const Color(0xFF0a0a0a),
-              ],
-            ),
-          ),
-        );
-      },
     );
   }
 }

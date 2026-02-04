@@ -12,26 +12,27 @@ class CTASection extends StatefulWidget {
 
 class _CTASectionState extends State<CTASection> with TickerProviderStateMixin {
   bool isVisible = false;
-  late AnimationController _waveController;
+  late AnimationController _pulseController;
 
   @override
   void initState() {
     super.initState();
-    _waveController = AnimationController(
-      duration: const Duration(seconds: 3),
+    _pulseController = AnimationController(
+      duration: const Duration(seconds: 4),
       vsync: this,
-    )..repeat();
+    )..repeat(reverse: true);
   }
 
   @override
   void dispose() {
-    _waveController.dispose();
+    _pulseController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
+    final isDesktop = size.width > 1000;
 
     return VisibilityDetector(
       key: const Key('cta-section'),
@@ -42,145 +43,134 @@ class _CTASectionState extends State<CTASection> with TickerProviderStateMixin {
       },
       child: Container(
         width: double.infinity,
+        constraints: BoxConstraints(minHeight: isDesktop ? 600 : 500),
         padding: EdgeInsets.symmetric(
-          horizontal: size.width > 1000 ? 120 : 24,
-          vertical: 120,
+          vertical: isDesktop ? 0 : 80,
+          horizontal: 24,
         ),
+        decoration: const BoxDecoration(color: Colors.transparent),
         child: Stack(
           alignment: Alignment.center,
           children: [
-            // Animated background waves
-            ...List.generate(3, (index) {
+            // Refined Animated Rings
+            ...List.generate(4, (index) {
               return AnimatedBuilder(
-                animation: _waveController,
+                animation: _pulseController,
                 builder: (context, child) {
+                  final progress = _pulseController.value;
                   return Container(
-                    width: 600 + (index * 200),
-                    height: 600 + (index * 200),
+                    width: 400 + (index * 200) + (progress * 50),
+                    height: 400 + (index * 200) + (progress * 50),
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
                       border: Border.all(
                         color: const Color(
-                          0xFF7C3AED,
-                        ).withOpacity(0.1 - (index * 0.02)),
-                        width: 2,
+                          0xFFD946EF,
+                        ).withOpacity(0.05 / (index + 1)),
+                        width: 1.5,
                       ),
                     ),
-                    transform: Matrix4.identity()
-                      ..scale(1 + (_waveController.value * 0.1 * (index + 1))),
                   );
                 },
               );
             }),
 
             // Content
-            Container(
-              padding: EdgeInsets.all(size.width > 600 ? 60 : 24),
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                  colors: [
-                    Colors.white.withOpacity(0.1),
-                    Colors.white.withOpacity(0.05),
-                  ],
-                ),
-                borderRadius: BorderRadius.circular(40),
-                border: Border.all(color: Colors.white.withOpacity(0.2)),
-                boxShadow: [
-                  BoxShadow(
-                    color: const Color(0xFF7C3AED).withOpacity(0.2),
-                    blurRadius: 100,
-                    spreadRadius: 20,
-                  ),
-                ],
-              ),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(
-                        'Ready to Transform?',
-                        style: TextStyle(
-                          fontSize: size.width > 1000 ? 56 : 36,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
-                        ),
-                      )
-                      .animate(target: isVisible ? 1 : 0)
-                      .fadeIn(duration: 800.ms)
-                      .slideY(begin: 0.3, end: 0),
+            Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                      'Ready to Transform?',
+                      style: TextStyle(
+                        fontSize: isDesktop ? 72 : 42,
+                        fontWeight: FontWeight.w900,
+                        color: const Color(0xFF111827), // Dark Heading
+                        letterSpacing: -2,
+                        height: 1.1,
+                      ),
+                    )
+                    .animate(target: isVisible ? 1 : 0)
+                    .fadeIn(duration: 800.ms)
+                    .scale(begin: const Offset(0.9, 0.9)),
 
-                  const SizedBox(height: 16),
+                const SizedBox(height: 16),
 
-                  Text(
-                        'Join 500+ companies already growing with Jenveda',
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          fontSize: 18,
-                          color: Colors.white.withOpacity(0.7),
-                        ),
-                      )
-                      .animate(target: isVisible ? 1 : 0)
-                      .fadeIn(duration: 800.ms, delay: 200.ms)
-                      .slideY(begin: 0.3, end: 0),
+                Text(
+                      'Join 500+ companies already growing with Jenveda',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontSize: 20,
+                        color: const Color(0xFF4B5563), // Grey Text
+                        fontWeight: FontWeight.w500,
+                      ),
+                    )
+                    .animate(target: isVisible ? 1 : 0)
+                    .fadeIn(duration: 800.ms, delay: 200.ms),
 
-                  const SizedBox(height: 40),
+                const SizedBox(height: 56),
 
-                  Wrap(
-                    alignment: WrapAlignment.center,
-                    spacing: 20,
-                    runSpacing: 20,
-                    children: [
-                      GlowingButton(
-                            text: 'Start Free Trial',
-                            onTap: () {},
-                            icon: Icons.rocket_launch,
-                          )
-                          .animate(target: isVisible ? 1 : 0)
-                          .fadeIn(duration: 600.ms, delay: 400.ms)
-                          .scale(begin: const Offset(0.8, 0.8)),
+                Wrap(
+                  alignment: WrapAlignment.center,
+                  spacing: 24,
+                  runSpacing: 20,
+                  children: [
+                    GlowingButton(
+                          text: 'Start Free Trial',
+                          onTap: () {},
+                          icon: Icons.rocket_launch,
+                        )
+                        .animate(target: isVisible ? 1 : 0)
+                        .fadeIn(duration: 600.ms, delay: 400.ms)
+                        .slideX(begin: -0.2, end: 0),
 
-                      GestureDetector(
+                    // Modern Glassmorphic Button
+                    MouseRegion(
+                          cursor: SystemMouseCursors.click,
+                          child: GestureDetector(
                             onTap: () {},
                             child: Container(
                               padding: const EdgeInsets.symmetric(
-                                horizontal: 32,
+                                horizontal: 36,
                                 vertical: 20,
                               ),
                               decoration: BoxDecoration(
-                                border: Border.all(
-                                  color: Colors.white.withOpacity(0.3),
-                                ),
+                                color: Colors.white,
                                 borderRadius: BorderRadius.circular(16),
+                                border: Border.all(
+                                  color: Colors.black.withOpacity(0.1),
+                                  width: 1.5,
+                                ),
                               ),
                               child: Row(
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
-                                  Icon(
-                                    Icons.calendar_today,
-                                    color: Colors.white.withOpacity(0.9),
+                                  const Icon(
+                                    Icons.calendar_today_outlined,
+                                    color: Color(0xFF374151), // Dark Icon
                                     size: 20,
                                   ),
-                                  const SizedBox(width: 8),
+                                  const SizedBox(width: 12),
                                   Text(
                                     'Schedule Demo',
                                     style: TextStyle(
-                                      color: Colors.white.withOpacity(0.9),
-                                      fontWeight: FontWeight.w600,
+                                      color: const Color(
+                                        0xFF374151,
+                                      ), // Dark Text
+                                      fontWeight: FontWeight.w700,
                                       fontSize: 16,
                                     ),
                                   ),
                                 ],
                               ),
                             ),
-                          )
-                          .animate(target: isVisible ? 1 : 0)
-                          .fadeIn(duration: 600.ms, delay: 500.ms)
-                          .scale(begin: const Offset(0.8, 0.8)),
-                    ],
-                  ),
-                ],
-              ),
+                          ),
+                        )
+                        .animate(target: isVisible ? 1 : 0)
+                        .fadeIn(duration: 600.ms, delay: 500.ms)
+                        .slideX(begin: 0.2, end: 0),
+                  ],
+                ),
+              ],
             ),
           ],
         ),

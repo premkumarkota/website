@@ -31,17 +31,17 @@ class FloatingParticles extends StatelessWidget {
                   height: size,
                   decoration: BoxDecoration(
                     color: index % 3 == 0
-                        ? const Color(0xFF7C3AED)
+                        ? const Color(0xFFD946EF)
                         : index % 3 == 1
-                        ? const Color(0xFFEC4899)
+                        ? const Color(0xFFFB923C)
                         : Colors.white,
                     shape: BoxShape.circle,
                     boxShadow: [
                       BoxShadow(
                         color:
                             (index % 3 == 0
-                                    ? const Color(0xFF7C3AED)
-                                    : const Color(0xFFEC4899))
+                                    ? const Color(0xFFD946EF)
+                                    : const Color(0xFFFB923C))
                                 .withOpacity(0.5),
                         blurRadius: 10,
                         spreadRadius: 2,

@@ -55,28 +55,15 @@ class _GlowingButtonState extends State<GlowingButton>
                   decoration: BoxDecoration(
                     gradient: LinearGradient(
                       colors: [
-                        const Color(0xFF7C3AED),
-                        const Color(0xFFEC4899),
-                        const Color(0xFF7C3AED),
+                        const Color(0xFFD946EF),
+                        const Color(0xFFFB923C),
+                        const Color(0xFFD946EF),
                       ],
                       stops: [0, _glowController.value, 1],
+                      begin: Alignment.centerLeft,
+                      end: Alignment.centerRight,
                     ),
                     borderRadius: BorderRadius.circular(16),
-                    boxShadow: [
-                      BoxShadow(
-                        color: const Color(
-                          0xFF7C3AED,
-                        ).withOpacity(isHovered ? 0.6 : 0.4),
-                        blurRadius: isHovered ? 40 : 30,
-                        spreadRadius: isHovered ? 4 : 2,
-                        offset: const Offset(0, 10),
-                      ),
-                      BoxShadow(
-                        color: const Color(0xFFEC4899).withOpacity(0.3),
-                        blurRadius: 60,
-                        spreadRadius: 10,
-                      ),
-                    ],
                   ),
                   child: Row(
                     mainAxisSize: MainAxisSize.min,

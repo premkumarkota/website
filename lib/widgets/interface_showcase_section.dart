@@ -65,7 +65,7 @@ class _InterfaceShowcaseSectionState extends State<InterfaceShowcaseSection> {
     final isDesktop = size.width > 900;
 
     // Adjust viewport fraction for responsiveness
-    final targetFraction = isDesktop ? 0.22 : 0.6;
+    final targetFraction = isDesktop ? 0.20 : 0.6;
 
     // Re-initialize controller if viewport fraction needs to change (e.g. resize)
     // Note: We check against the current controller's fraction.
@@ -134,7 +134,7 @@ class _InterfaceShowcaseSectionState extends State<InterfaceShowcaseSection> {
 
             // Carousel
             SizedBox(
-              height: isDesktop ? 600 : 350,
+              height: isDesktop ? 600 : 470,
               child: PageView.builder(
                 controller: _pageController,
                 itemCount: null, // Infinite scrolling

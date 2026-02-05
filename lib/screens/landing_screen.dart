@@ -15,6 +15,8 @@ import '../widgets/interface_showcase_section.dart';
 import '../widgets/animated_footer.dart';
 import '../controller/navigation_controller.dart';
 
+import 'package:liquid_pull_to_refresh/liquid_pull_to_refresh.dart';
+
 class LandingScreen extends StatefulWidget {
   const LandingScreen({Key? key}) : super(key: key);
 
@@ -34,6 +36,14 @@ class _LandingScreenState extends State<LandingScreen>
   @override
   void dispose() {
     super.dispose();
+  }
+
+  Future<void> _handleRefresh() async {
+    // Simulate refresh delay or reload data
+    await Future.delayed(const Duration(seconds: 1));
+    setState(() {
+      // Trigger rebuilds if needed
+    });
   }
 
   @override
@@ -64,46 +74,54 @@ class _LandingScreenState extends State<LandingScreen>
           ),
 
           // Main Content - Scrolls over the fixed background
-          CustomScrollView(
-            controller: navController.scrollController,
-            physics: const BouncingScrollPhysics(),
-            slivers: [
-              // Section 1: Navbar
-              const AnimatedNavbar(),
+          LiquidPullToRefresh(
+            onRefresh: _handleRefresh,
+            color: const Color(0xFFD946EF), // Theme pink
+            backgroundColor: Colors.white,
+            height: 100,
+            showChildOpacityTransition: false,
+            animSpeedFactor: 2.0,
+            child: CustomScrollView(
+              controller: navController.scrollController,
+              physics: const BouncingScrollPhysics(),
+              slivers: [
+                // Section 1: Navbar
+                const AnimatedNavbar(),
 
-              // Section 1: Hero Section - Centered Content (Light area)
-              const SliverToBoxAdapter(child: HeroSection()),
+                // Section 1: Hero Section - Centered Content (Light area)
+                const SliverToBoxAdapter(child: HeroSection()),
 
-              // Section 2: Enterprise Platform (Transition area)
-              const SliverToBoxAdapter(child: ImmersiveCarouselSection()),
+                // Section 2: Enterprise Platform (Transition area)
+                const SliverToBoxAdapter(child: ImmersiveCarouselSection()),
 
-              // Section 2.5: App Interface Showcase (Beautiful Interface)
-              const SliverToBoxAdapter(child: InterfaceShowcaseSection()),
+                // Section 2.5: App Interface Showcase (Beautiful Interface)
+                const SliverToBoxAdapter(child: InterfaceShowcaseSection()),
 
-              // Section 3: Product Suite (Dark area)
-              const SliverToBoxAdapter(child: ProductSuiteSection()),
+                // Section 3: Product Suite (Dark area)
+                const SliverToBoxAdapter(child: ProductSuiteSection()),
 
-              // Section 4: Features with 3D cards
-              const SliverToBoxAdapter(child: Features3DSection()),
+                // Section 4: Features with 3D cards
+                const SliverToBoxAdapter(child: Features3DSection()),
 
-              // Section 5: Products showcase
-              const SliverToBoxAdapter(child: ProductsShowcase()),
+                // Section 5: Products showcase
+                const SliverToBoxAdapter(child: ProductsShowcase()),
 
-              // Section 6: Clients Showcase Marquee
-              const SliverToBoxAdapter(child: ClientsShowcase()),
+                // Section 6: Clients Showcase Marquee
+                const SliverToBoxAdapter(child: ClientsShowcase()),
 
-              // Section 7: Stats counter animation
-              const SliverToBoxAdapter(child: StatsSection()),
+                // Section 7: Stats counter animation
+                const SliverToBoxAdapter(child: StatsSection()),
 
-              // Section 8: Testimonials
-              const SliverToBoxAdapter(child: TestimonialsSection()),
+                // Section 8: Testimonials
+                const SliverToBoxAdapter(child: TestimonialsSection()),
 
-              // Section 9: CTA Section
-              const SliverToBoxAdapter(child: CTASection()),
+                // Section 9: CTA Section
+                const SliverToBoxAdapter(child: CTASection()),
 
-              // Section 10: Footer
-              const SliverToBoxAdapter(child: AnimatedFooter()),
-            ],
+                // Section 10: Footer
+                const SliverToBoxAdapter(child: AnimatedFooter()),
+              ],
+            ),
           ),
         ],
       ),

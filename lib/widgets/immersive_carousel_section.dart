@@ -130,7 +130,9 @@ class _ImmersiveCarouselSectionState extends State<ImmersiveCarouselSection>
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     final isDesktop = size.width > 1100;
-    final sectionHeight = isDesktop ? 750.0 : 650.0;
+    final sectionHeight = isDesktop
+        ? 750.0
+        : 800.0; // Increased height to fit larger cards
 
     return VisibilityDetector(
       key: const Key('immersive-carousel-section'),
@@ -330,7 +332,9 @@ class _Premium3DCardState extends State<_Premium3DCard>
     final size = MediaQuery.of(context).size;
     final isDesktop = size.width > 1100;
     final cardWidth = isDesktop ? 400.0 : size.width * 0.85;
-    final cardHeight = isDesktop ? 620.0 : 540.0;
+    final cardHeight = isDesktop
+        ? 620.0
+        : 680.0; // Increased to 680 to fix overflow
 
     return MouseRegion(
       onEnter: (_) => setState(() => _isHovered = true),
@@ -454,7 +458,12 @@ class _Premium3DCardState extends State<_Premium3DCard>
                   // 2. Bottom Content Section (55%)
                   Expanded(
                     child: Container(
-                      padding: const EdgeInsets.fromLTRB(32, 40, 32, 32),
+                      padding: EdgeInsets.fromLTRB(
+                        isDesktop ? 32 : 20,
+                        isDesktop ? 40 : 16, // Reduced top padding
+                        isDesktop ? 32 : 20,
+                        isDesktop ? 32 : 16, // Reduced bottom padding
+                      ),
                       width: double.infinity,
                       decoration: const BoxDecoration(color: Colors.white),
                       child: Column(
@@ -475,7 +484,7 @@ class _Premium3DCardState extends State<_Premium3DCard>
                             maxLines: 2,
                             overflow: TextOverflow.ellipsis,
                             style: GoogleFonts.playfairDisplay(
-                              fontSize: 28,
+                              fontSize: isDesktop ? 28 : 22,
                               fontWeight: FontWeight.w700,
                               color: const Color(0xFF111827),
                               height: 1.1,

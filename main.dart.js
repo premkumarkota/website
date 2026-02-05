@@ -88748,7 +88748,7 @@ o===$&&A.a()
 r=$.dT()
 r.b=s
 r.c=n
-return new A.Aq("Jenveda | Next-Gen ERP Solutions",q,p,B.X4,!1,o,n,s,null)},
+return new A.Aq("Jenveda",q,p,B.X4,!1,o,n,s,null)},
 Np(){var s=null,r=A.aSU(A.rI(B.a7,s,s,s,s,s).ok)
 return A.rI(B.a7,B.E9,new A.uj(A.aB9(s,s,B.t,s,s,s,0,s,s,B.e,s,s,B.kh,s,new A.d0(A.b5(16),B.x),s,s,s,s,s)),B.e,r,!0)}}
 A.a1S.prototype={
@@ -88932,7 +88932,7 @@ A.Vm.prototype={
 aq(){this.aM()},
 l(){this.a5h()},
 I(a){var s=null,r=this.a75(),q=t.p
-return A.D4(s,B.hj,A.eJ(B.bi,A.b([A.OD(0,A.aK(s,s,B.l,B.hj,s,s,s,s,s,s,s,s,s)),A.OD(0,A.aK(s,s,B.l,s,s,new A.aC(s,s,s,s,s,new A.cJ(B.dL,B.fZ,B.a6,A.b([A.V(102,B.e.m()>>>16&255,B.e.m()>>>8&255,B.e.m()&255),A.V(B.d.a0(25.5),B.e.m()>>>16&255,B.e.m()>>>8&255,B.e.m()&255),A.V(B.d.a0(127.5),B.e.m()>>>16&255,B.e.m()>>>8&255,B.e.m()&255)],t.W),s,s),s,B.w),s,s,s,s,s,s,s)),A.LB(this.d.ax,B.h5,A.b([B.h_,B.Rh,B.Rd,B.Ri,B.Rg,B.Rm,B.Rj,B.Rf,B.Rk,B.Rl,B.Re,B.Au],q))],q),B.J,B.b1),r)},
+return A.D4(s,B.hj,A.eJ(B.bi,A.b([A.OD(0,A.aK(s,s,B.l,B.hj,s,s,s,s,s,s,s,s,s)),A.OD(0,A.aK(s,s,B.l,s,s,new A.aC(s,s,s,s,s,new A.cJ(B.dL,B.fZ,B.a6,A.b([A.V(102,B.e.m()>>>16&255,B.e.m()>>>8&255,B.e.m()&255),A.V(B.d.a0(25.5),B.e.m()>>>16&255,B.e.m()>>>8&255,B.e.m()&255),A.V(B.d.a0(127.5),B.e.m()>>>16&255,B.e.m()>>>8&255,B.e.m()&255)],t.W),s,s),s,B.w),s,s,s,s,s,s,s)),A.LB(this.d.ax,B.h5,A.b([B.h_,B.Rh,B.Rd,B.Rm,B.Ri,B.Rg,B.Rj,B.Rf,B.Rk,B.Rl,B.Re,B.Au],q))],q),B.J,B.b1),r)},
 a75(){var s=null,r=t.N,q=t.z,p=t.bG
 r=A.a0(new A.a6(A.b([A.Z(["title","Home","route","/"],r,q),A.Z(["title","About","route","/about"],r,q),A.Z(["title","Products","route","/products"],r,q),A.Z(["title","Contact","route","/contact"],r,q)],t.H7),new A.asw(this),p),p.i("au.E"))
 r=A.dc(A.aGW(r,B.bo,s,!1),1,s)

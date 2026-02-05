@@ -65,15 +65,19 @@ class _InterfaceShowcaseSectionState extends State<InterfaceShowcaseSection> {
     final isDesktop = size.width > 900;
 
     // Adjust viewport fraction for responsiveness
-    final viewportFraction = isDesktop ? 0.22 : 0.7;
-    if (_pageController.hasClients) {
-      // We can't dynamically update controller's viewport fraction safely,
-      // but for simplicity we rely on re-builds separate from controller logic usually.
-      // Here we'll just stick to the controller initialized or use a key to force rebuild if resized?
-      // For this demo, let's assume one mode or simple re-init if needed,
-      // but typically PageController retains its initial viewportFraction.
-      // We'll proceed with simple rebuilds not updating the controller's fraction perfectly on window resize
-      // without re-creating it, but for a web app resize is rare enough to ignore or handle via Key.
+    final targetFraction = isDesktop ? 0.22 : 0.6;
+
+    // Re-initialize controller if viewport fraction needs to change (e.g. resize)
+    // Note: We check against the current controller's fraction.
+    // This allows proper resizing between Mobile and Desktop modes.
+    if (_pageController.viewportFraction != targetFraction) {
+      final oldPage = _pageController.hasClients
+          ? _pageController.page?.round() ?? 1000
+          : 1000;
+      _pageController = PageController(
+        viewportFraction: targetFraction,
+        initialPage: oldPage,
+      );
     }
 
     return VisibilityDetector(
@@ -130,7 +134,7 @@ class _InterfaceShowcaseSectionState extends State<InterfaceShowcaseSection> {
 
             // Carousel
             SizedBox(
-              height: isDesktop ? 600 : 500,
+              height: isDesktop ? 600 : 350,
               child: PageView.builder(
                 controller: _pageController,
                 itemCount: null, // Infinite scrolling

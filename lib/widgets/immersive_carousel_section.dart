@@ -162,8 +162,9 @@ class _ImmersiveCarouselSectionState extends State<ImmersiveCarouselSection>
       padding: EdgeInsets.symmetric(horizontal: isDesktop ? 80 : 24),
       child: Column(
         children: [
-          Row(
-                mainAxisAlignment: MainAxisAlignment.center,
+          Wrap(
+                alignment: WrapAlignment.center,
+                crossAxisAlignment: WrapCrossAlignment.center,
                 children: [
                   Text(
                     'NEXT-GEN ',

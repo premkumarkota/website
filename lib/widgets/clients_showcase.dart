@@ -53,8 +53,9 @@ class _ClientsShowcaseState extends State<ClientsShowcase> {
         child: Column(
           children: [
             // Section Header
-            Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
+            Wrap(
+                  alignment: WrapAlignment.center,
+                  crossAxisAlignment: WrapCrossAlignment.center,
                   children: [
                     Text(
                       'TRUSTED BY ',

@@ -58,8 +58,9 @@ class _ProductSuiteSectionState extends State<ProductSuiteSection>
   Widget _buildSectionHeader(bool isDesktop) {
     return Column(
       children: [
-        Row(
-              mainAxisAlignment: MainAxisAlignment.center,
+        Wrap(
+              alignment: WrapAlignment.center,
+              crossAxisAlignment: WrapCrossAlignment.center,
               children: [
                 Text(
                   'COMPREHENSIVE ',

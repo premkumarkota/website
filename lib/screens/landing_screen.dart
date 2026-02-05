@@ -77,14 +77,14 @@ class _LandingScreenState extends State<LandingScreen>
               // Section 2: Enterprise Platform (Transition area)
               const SliverToBoxAdapter(child: ImmersiveCarouselSection()),
 
+              // Section 2.5: App Interface Showcase (Beautiful Interface)
+              const SliverToBoxAdapter(child: InterfaceShowcaseSection()),
+
               // Section 3: Product Suite (Dark area)
               const SliverToBoxAdapter(child: ProductSuiteSection()),
 
               // Section 4: Features with 3D cards
               const SliverToBoxAdapter(child: Features3DSection()),
-
-              // Section 2.5: App Interface Showcase
-              const SliverToBoxAdapter(child: InterfaceShowcaseSection()),
 
               // Section 5: Products showcase
               const SliverToBoxAdapter(child: ProductsShowcase()),

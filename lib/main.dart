@@ -18,7 +18,7 @@ class JenvedaApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp.router(
-      title: 'Jenveda | Next-Gen ERP Solutions',
+      title: 'Jenveda',
       debugShowCheckedModeBanner: false,
       theme: _buildTheme(),
       darkTheme: _buildDarkTheme(),

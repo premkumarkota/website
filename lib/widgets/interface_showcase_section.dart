@@ -83,6 +83,8 @@ class _InterfaceShowcaseSectionState extends State<InterfaceShowcaseSection> {
           if (!_isVisible) setState(() => _isVisible = true);
           _startTimer();
         } else if (info.visibleFraction < 0.1) {
+          if (_isVisible)
+            setState(() => _isVisible = false); // Reset for replay
           _stopTimer();
         }
       },

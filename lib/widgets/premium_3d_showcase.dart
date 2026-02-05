@@ -106,6 +106,7 @@ class _Premium3DShowcaseState extends State<Premium3DShowcase>
 
   void _onVisibilityChanged(VisibilityInfo info) {
     if (info.visibleFraction > 0.3 && !_isVisible) {
+      if (!mounted) return;
       setState(() => _isVisible = true);
       // Start entrance after 300ms delay
       Future.delayed(const Duration(milliseconds: 300), () {
@@ -118,7 +119,9 @@ class _Premium3DShowcaseState extends State<Premium3DShowcase>
         }
       });
     } else if (info.visibleFraction < 0.1 && _isVisible) {
-      // Stop auto-slide when not visible
+      if (!mounted) return;
+      setState(() => _isVisible = false); // Reset visibility state
+      _entranceController.reset(); // Reset animation controller
       _autoSlideTimer?.cancel();
     }
   }

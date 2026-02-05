@@ -98,11 +98,15 @@ class _ImmersiveCarouselSectionState extends State<ImmersiveCarouselSection>
 
   void _onVisibilityChanged(VisibilityInfo info) {
     if (info.visibleFraction > 0.3 && !_isVisible) {
-      setState(() => _isVisible = true);
-      _startAutoPlay();
-    } else if (info.visibleFraction < 0.1 && _isVisible) {
-      setState(() => _isVisible = false);
-      _stopAutoPlay();
+      if (mounted) {
+        setState(() => _isVisible = true);
+        _startAutoPlay();
+      }
+    } else if (info.visibleFraction < 0.1) {
+      if (mounted && _isVisible) {
+        setState(() => _isVisible = false); // RESET ANIMATION
+        _stopAutoPlay();
+      }
     }
   }
 
@@ -223,30 +227,27 @@ class _ImmersiveCarouselSectionState extends State<ImmersiveCarouselSection>
                 value = _pageController.page! - index;
               }
 
-              // Liquid Physics Calculation
+              // Flip/Rotate Calculation
               final dist = value.abs();
-              final scale = (1.0 - (dist * 0.15)).clamp(0.8, 1.0);
+              final rotation =
+                  value *
+                  -0.4; // Rotate based on position (negative for natural left-flip)
 
               // Parallax Flow
-              final parallaxOffset = value * 0.5;
+              final parallaxOffset = value * 0.8;
 
-              // Opacity & Blur
-              final opacity = (1.0 - (dist * 0.4)).clamp(0.0, 1.0);
+              // Opacity
+              final opacity = (1.0 - (dist * 0.3)).clamp(0.0, 1.0);
 
-              // Transform
-              final transX = value * 20.0;
-              final transY = value.abs() * 30.0;
+              // Scale correction (keep active card prominent)
+              final scale = 1.0 - (dist * 0.1);
 
               return Center(
                 child: Transform(
                   transform: Matrix4.identity()
-                    ..setEntry(3, 2, 0.001) // Perspective
-                    ..translate(transX, transY, 0.0)
-                    ..scale(
-                      scale + (0.05 * (1 - dist)),
-                      scale,
-                      1.0,
-                    ), // Elastic scale
+                    ..setEntry(3, 2, 0.0015) // Strong perspective
+                    ..rotateY(rotation) // The Flip
+                    ..scale(scale, scale),
                   alignment: Alignment.center,
                   child: Opacity(
                     opacity: opacity,
@@ -327,9 +328,8 @@ class _Premium3DCardState extends State<_Premium3DCard>
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     final isDesktop = size.width > 1100;
-    // slightly wider for fluid look
-    final cardWidth = isDesktop ? 480.0 : size.width * 0.85;
-    final cardHeight = isDesktop ? 600.0 : 540.0;
+    final cardWidth = isDesktop ? 400.0 : size.width * 0.85;
+    final cardHeight = isDesktop ? 620.0 : 540.0;
 
     return MouseRegion(
       onEnter: (_) => setState(() => _isHovered = true),
@@ -339,257 +339,241 @@ class _Premium3DCardState extends State<_Premium3DCard>
         curve: Curves.easeOutQuart,
         width: cardWidth,
         height: cardHeight,
+        transform: Matrix4.identity()..translate(0.0, _isHovered ? -10.0 : 0.0),
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(40), // Softer corners
+          borderRadius: BorderRadius.circular(32),
+          color: Colors.white,
           boxShadow: [
             BoxShadow(
-              color: widget.data.gradient.colors.first.withValues(alpha: 0.15),
-              blurRadius: _isHovered ? 80 : 40,
-              spreadRadius: _isHovered ? 10 : 0,
-              offset: Offset(0, _isHovered ? 30 : 20),
+              color: Colors.black.withOpacity(0.08),
+              blurRadius: _isHovered ? 50 : 30,
+              offset: Offset(0, _isHovered ? 20 : 10),
             ),
+            if (_isHovered)
+              BoxShadow(
+                color: widget.data.gradient.colors.first.withOpacity(0.2),
+                blurRadius: 30,
+                offset: const Offset(0, 10),
+              ),
           ],
         ),
         child: ClipRRect(
-          borderRadius: BorderRadius.circular(40),
+          borderRadius: BorderRadius.circular(32),
           child: Stack(
             children: [
-              // Parallax Background Image
-              // We use an effectively larger container and align it based on parallaxOffset
-              Positioned.fill(
-                left: -50, // Allow room to move
-                right: -50,
-                child: AnimatedBuilder(
-                  // Use simple approach, alignment change
-                  animation: AlwaysStoppedAnimation(widget.parallaxOffset),
-                  builder: (context, _) {
-                    // map -1.0..1.0 to Alignment x
-                    return Align(
-                      alignment: Alignment(
-                        widget.parallaxOffset.clamp(-1.0, 1.0),
-                        0,
-                      ),
-                      child: SizedBox(
-                        width: cardWidth * 1.5, // Check this scale
-                        height: cardHeight,
-                        child: Image.network(
-                          widget.data.image,
-                          fit: BoxFit.cover,
-                          errorBuilder: (context, error, stack) => Container(
-                            decoration: BoxDecoration(
-                              gradient: widget.data.gradient,
+              Column(
+                children: [
+                  // 1. Top Image Section (45%)
+                  SizedBox(
+                    height: cardHeight * 0.45,
+                    width: double.infinity,
+                    child: Stack(
+                      fit: StackFit.expand,
+                      children: [
+                        // Parallax/Scale Image
+                        AnimatedScale(
+                          scale: _isHovered ? 1.05 : 1.0,
+                          duration: const Duration(milliseconds: 700),
+                          curve: Curves.easeOutCubic,
+                          child: Image.network(
+                            widget.data.image,
+                            fit: BoxFit.cover,
+                            alignment: Alignment(
+                              widget.parallaxOffset * 0.5,
+                              0,
+                            ),
+                            errorBuilder: (context, error, stack) => Container(
+                              decoration: BoxDecoration(
+                                gradient: widget.data.gradient,
+                              ),
                             ),
                           ),
                         ),
-                      ),
-                    );
-                  },
-                ),
-              ),
-
-              // White Gradient overlay (Light Theme)
-              Positioned.fill(
-                child: Container(
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      begin: Alignment.topCenter,
-                      end: Alignment.bottomCenter,
-                      colors: [
-                        Colors.white.withValues(
-                          alpha: 0.0,
-                        ), // Fully transparent at top to show image
-                        Colors.white.withValues(
-                          alpha: 0.2,
-                        ), // Very light middle
-                        Colors.white.withValues(
-                          alpha: 0.75,
-                        ), // Just enough for text readability
+                        // Dark overlay for text contrast on top
+                        Container(
+                          decoration: BoxDecoration(
+                            gradient: LinearGradient(
+                              begin: Alignment.topCenter,
+                              end: Alignment.bottomCenter,
+                              colors: [
+                                Colors.black.withOpacity(0.4),
+                                Colors.transparent,
+                              ],
+                              stops: const [0.0, 0.6],
+                            ),
+                          ),
+                        ),
+                        // Branding
+                        Positioned(
+                          top: 24,
+                          left: 24,
+                          child: Text(
+                            'Jenveda',
+                            style: GoogleFonts.playfairDisplay(
+                              fontSize: 18,
+                              fontWeight: FontWeight.w700,
+                              color: Colors.white,
+                              fontStyle: FontStyle.italic,
+                              letterSpacing: 0.5,
+                            ),
+                          ),
+                        ),
+                        // Tag
+                        Positioned(
+                          top: 24,
+                          right: 24,
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 12,
+                              vertical: 6,
+                            ),
+                            decoration: BoxDecoration(
+                              color: Colors.white.withOpacity(0.2),
+                              border: Border.all(
+                                color: Colors.white.withOpacity(0.3),
+                              ),
+                              borderRadius: BorderRadius.circular(20),
+                              backgroundBlendMode: BlendMode.overlay,
+                            ),
+                            child: const Text(
+                              'ENTERPRISE',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 10,
+                                fontWeight: FontWeight.bold,
+                                letterSpacing: 1.5,
+                              ),
+                            ),
+                          ),
+                        ),
                       ],
-                      stops: const [0.0, 0.6, 1.0],
                     ),
                   ),
-                ),
-              ),
 
-              // Shimmer effect
-              if (widget.isActive)
-                AnimatedBuilder(
-                  animation: _shimmerController,
-                  builder: (context, child) {
-                    return Positioned(
-                      left:
-                          -cardWidth +
-                          (_shimmerController.value * cardWidth * 2),
-                      top: 0,
-                      child: Container(
-                        width: cardWidth * 0.5,
-                        height: cardHeight,
-                        decoration: BoxDecoration(
-                          gradient: LinearGradient(
-                            colors: [
-                              Colors.transparent,
-                              Colors.white.withValues(alpha: 0.4),
-                              Colors.transparent,
-                            ],
+                  // 2. Bottom Content Section (55%)
+                  Expanded(
+                    child: Container(
+                      padding: const EdgeInsets.fromLTRB(32, 40, 32, 32),
+                      width: double.infinity,
+                      decoration: const BoxDecoration(color: Colors.white),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          // Title Group
+                          Text(
+                            'Explore',
+                            style: GoogleFonts.playfairDisplay(
+                              fontSize: 22,
+                              color: const Color(0xFF6B7280),
+                              fontStyle: FontStyle.italic,
+                            ),
                           ),
-                        ),
-                      ),
-                    );
-                  },
-                ),
-
-              // Content
-              Padding(
-                padding: const EdgeInsets.all(32),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisSize: MainAxisSize.max, // Fill height so Spacer works
-                  children: [
-                    // Header
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          'Jenveda',
-                          style: GoogleFonts.playfairDisplay(
-                            fontSize: 18,
-                            fontWeight: FontWeight.w600,
-                            color: const Color(0xFF111827),
-                            fontStyle: FontStyle.italic,
-                          ),
-                        ),
-                        Container(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 14,
-                            vertical: 6,
-                          ),
-                          decoration: BoxDecoration(
-                            gradient: widget.data.gradient,
-                            borderRadius: BorderRadius.circular(20),
-                            boxShadow: [
-                              BoxShadow(
-                                color: widget.data.gradient.colors.first
-                                    .withValues(alpha: 0.3),
-                                blurRadius: 15,
-                                offset: const Offset(0, 5),
-                              ),
-                            ],
-                          ),
-                          child: const Text(
-                            'ENTERPRISE',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 9,
+                          const SizedBox(height: 4),
+                          Text(
+                            widget.data.title,
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
+                            style: GoogleFonts.playfairDisplay(
+                              fontSize: 28,
                               fontWeight: FontWeight.w700,
-                              letterSpacing: 2,
+                              color: const Color(0xFF111827),
+                              height: 1.1,
                             ),
                           ),
-                        ),
-                      ],
-                    ),
-
-                    // Spacer to push content down
-                    const Spacer(),
-
-                    // Icon
-                    Container(
-                      padding: const EdgeInsets.all(16),
-                      decoration: BoxDecoration(
-                        gradient: widget.data.gradient,
-                        borderRadius: BorderRadius.circular(16),
-                        boxShadow: [
-                          BoxShadow(
-                            color: widget.data.gradient.colors.first.withValues(
-                              alpha: 0.4,
+                          const SizedBox(height: 12),
+                          Text(
+                            widget.data.description,
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(
+                              fontSize: 14,
+                              color: const Color(0xFF6B7280),
+                              height: 1.5,
                             ),
-                            blurRadius: 20,
-                            offset: const Offset(0, 10),
+                          ),
+
+                          const Spacer(),
+
+                          // Features List
+                          Container(
+                            decoration: BoxDecoration(
+                              color: const Color(0xFFF9FAFB),
+                              borderRadius: BorderRadius.circular(16),
+                            ),
+                            padding: const EdgeInsets.all(16),
+                            child: Column(
+                              children: widget.data.features.take(2).map((
+                                feature,
+                              ) {
+                                return Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                    vertical: 4,
+                                  ),
+                                  child: Row(
+                                    children: [
+                                      Icon(
+                                        Icons.check_circle_rounded,
+                                        size: 18,
+                                        color:
+                                            widget.data.gradient.colors.first,
+                                      ),
+                                      const SizedBox(width: 8),
+                                      Expanded(
+                                        child: Text(
+                                          feature,
+                                          style: const TextStyle(
+                                            fontSize: 13,
+                                            fontWeight: FontWeight.w600,
+                                            color: Color(0xFF374151),
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                );
+                              }).toList(),
+                            ),
                           ),
                         ],
                       ),
-                      child: Icon(
-                        widget.data.icon,
-                        color: Colors.white,
-                        size: 32,
-                      ),
                     ),
+                  ),
+                ],
+              ),
 
-                    const SizedBox(height: 20),
-
-                    // Title
-                    Text(
-                      'Explore',
-                      style: GoogleFonts.playfairDisplay(
-                        fontSize: 28,
-                        fontWeight: FontWeight.w400,
-                        color: const Color(0xFF374151),
-                        fontStyle: FontStyle.italic,
-                        height: 1.1,
-                      ),
-                    ),
-                    Text(
-                      widget.data.title,
-                      style: GoogleFonts.playfairDisplay(
-                        fontSize: 32,
-                        fontWeight: FontWeight.w700,
-                        color: const Color(0xFF111827),
-                        fontStyle: FontStyle.italic,
-                        height: 1.1,
-                      ),
-                    ),
-
-                    const SizedBox(height: 8),
-
-                    Text(
-                      widget.data.subtitle,
-                      style: TextStyle(
-                        fontSize: 13,
-                        color: const Color(0xFF4B5563),
-                        fontWeight: FontWeight.w400,
-                      ),
-                    ),
-
-                    const SizedBox(height: 24),
-
-                    // Features
+              // 3. Floating Icon
+              Positioned(
+                top: (cardHeight * 0.45) - 32, // Center on the seam
+                right: 32,
+                child:
                     Container(
-                      padding: const EdgeInsets.all(16),
-                      decoration: BoxDecoration(
-                        color: const Color(0xFFF3F4F6),
-                        borderRadius: BorderRadius.circular(16),
-                        border: Border.all(color: const Color(0xFFE5E7EB)),
-                      ),
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: widget.data.features.map((feature) {
-                          return Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 4),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Expanded(
-                                  child: Text(
-                                    feature,
-                                    style: TextStyle(
-                                      fontSize: 12,
-                                      color: const Color(0xFF1F2937),
-                                      fontWeight: FontWeight.w500,
-                                    ),
-                                  ),
-                                ),
-                                const Icon(
-                                  Icons.check_circle,
-                                  color: Color(0xFF10B981),
-                                  size: 16,
-                                ),
-                              ],
-                            ),
-                          );
-                        }).toList(),
-                      ),
-                    ),
-                  ],
-                ),
+                          width: 64,
+                          height: 64,
+                          decoration: BoxDecoration(
+                            gradient: widget.data.gradient,
+                            shape: BoxShape.circle,
+                            boxShadow: [
+                              BoxShadow(
+                                color: widget.data.gradient.colors.first
+                                    .withOpacity(0.4),
+                                blurRadius: 16,
+                                offset: const Offset(0, 8),
+                              ),
+                              const BoxShadow(
+                                color: Colors.white,
+                                blurRadius: 0,
+                                spreadRadius: 4, // White border effect
+                              ),
+                            ],
+                          ),
+                          child: Icon(
+                            widget.data.icon,
+                            color: Colors.white,
+                            size: 28,
+                          ),
+                        )
+                        .animate(target: _isHovered ? 1 : 0)
+                        .scale(end: const Offset(1.1, 1.1), duration: 200.ms),
               ),
             ],
           ),
